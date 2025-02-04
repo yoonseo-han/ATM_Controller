@@ -1,7 +1,7 @@
 import { AtmController } from "../src/AtmController";
 import { BankService } from "../src/service/BankService";
 
-describe ('ATM Controller', () => {
+describe('ATM Controller', () => {
   let atm: AtmController;
   let bankService: BankService;
   
@@ -10,58 +10,167 @@ describe ('ATM Controller', () => {
     atm = new AtmController(bankService);
   });
 
-  test('Should handle card insertion and verify card', () => {
-    expect(atm.insertCard('1234-5678')).toBe(true);
-    expect(atm.insertCard('Not a card')).toBe(false);
+  describe('Card Insertion', () => {
+    test('Should accept valid card', () => {
+      expect(atm.insertCard('1234-5678')).toBe(true);
+    });
+
+    test('Should reject invalid card', () => {
+      expect(atm.insertCard('invalid-card')).toBe(false);
+    });
+
+    test('Should reject empty card number', () => {
+      expect(atm.insertCard('')).toBe(false);
+    });
+
+    test('Should handle multiple card insertions', () => {
+      expect(atm.insertCard('1234-5678')).toBe(true);
+      expect(atm.insertCard('1234-5678')).toBe(false); 
+    });
   });
 
-  test('Should verify PIN input', () => {
-    atm.insertCard('1234-5678');
-    expect(atm.validatePIN('1234')).toBe(true);
-    expect(atm.validatePIN('1111')).toBe(false);
+  describe('PIN Validation', () => {
+    beforeEach(() => {
+      atm.insertCard('1234-5678');
+    });
+
+    test('Should accept correct PIN', () => {
+      expect(atm.validatePIN('1234')).toBe(true);
+    });
+
+    test('Should reject incorrect PIN', () => {
+      expect(atm.validatePIN('1111')).toBe(false);
+    });
+
+    test('Should reject empty PIN', () => {
+      expect(atm.validatePIN('')).toBe(false);
+    });
+
+    test('Should handle PIN validation before card insertion', () => {
+      const newAtm = new AtmController(bankService);
+      expect(newAtm.validatePIN('1234')).toBe(false);
+    });
   });
 
-  test('Should get account information correctly after PIN validation', () => {
-    atm.insertCard('1234-5678');
-    atm.validatePIN('1234');
-    
-    const accounts = atm.getAccounts();
-    expect(accounts).toHaveLength(1);
-    expect(accounts[0].id).toBe('1');
-    expect(accounts[0].balance).toBe(500);
+  describe('Account Operations', () => {
+    beforeEach(() => {
+      atm.insertCard('1234-5678');
+      atm.validatePIN('1234');
+    });
+
+    test('Should retrieve correct account information', () => {
+      const accounts = atm.getAccounts();
+      expect(accounts).toHaveLength(1);
+      expect(accounts[0]).toEqual({
+        id: '1',
+        balance: 500
+      });
+    });
+
+    test('Should handle account selection correctly', () => {
+      expect(atm.selectAccount('1')).toBe(true);
+      expect(atm.selectAccount('non-existent')).toBe(false);
+    });
+
+    test('Should not allow account operations without PIN validation', () => {
+      const newAtm = new AtmController(bankService);
+      newAtm.insertCard('1234-5678');
+      expect(() => newAtm.getAccounts()).toThrow();
+    });
   });
 
-  test('Should handle account selection', () => {
-    atm.insertCard('1234-5678');
-    atm.validatePIN('1234');
+  describe('Balance Operations', () => {
+    beforeEach(() => {
+      atm.insertCard('1234-5678');
+      atm.validatePIN('1234');
+      atm.selectAccount('1');
+    });
 
-    expect(atm.selectAccount('1')).toBe(true);
-    expect(atm.selectAccount('Invalid Account')).toBe(false);
+    test('Should show correct initial balance', () => {
+      expect(atm.checkBalance()).toBe(500);
+    });
+
+    test('Should not show balance without account selection', () => {
+      const newAtm = new AtmController(bankService);
+      newAtm.insertCard('1234-5678');
+      newAtm.validatePIN('1234');
+      expect(() => newAtm.checkBalance()).toThrow();
+    });
   });
 
-  test('Should perform balance check correctly', async () => {
-    atm.insertCard('1234-5678');
-    atm.validatePIN('1234');
-    atm.selectAccount('1');
-    
-    expect(atm.checkBalance()).toBe(500);
+  describe('Withdrawal Operations', () => {
+    beforeEach(() => {
+      atm.insertCard('1234-5678');
+      atm.validatePIN('1234');
+      atm.selectAccount('1');
+    });
+
+    test('Should allow valid withdrawal', () => {
+      expect(atm.withdraw(300)).toBe(true);
+      expect(atm.checkBalance()).toBe(200);
+    });
+
+    test('Should reject withdrawal exceeding balance', () => {
+      expect(atm.withdraw(600)).toBe(false);
+      expect(atm.checkBalance()).toBe(500);
+    });
+
+    test('Should reject negative withdrawal amount', () => {
+      expect(atm.withdraw(-100)).toBe(false);
+      expect(atm.checkBalance()).toBe(500);
+    });
+
+    test('Should handle multiple withdrawals', () => {
+      expect(atm.withdraw(200)).toBe(true);
+      expect(atm.withdraw(200)).toBe(true);
+      expect(atm.withdraw(200)).toBe(false);
+      expect(atm.checkBalance()).toBe(100);
+    });
   });
 
-  test('Should perform withdrawal correctly', async () => {
-    atm.insertCard('1234-5678');
-    atm.validatePIN('1234');
-    atm.selectAccount('1');
-    
-    expect(atm.withdraw(500)).toBe(true);
-    expect(atm.checkBalance()).toBe(0);
+  describe('Deposit Operations', () => {
+    beforeEach(() => {
+      atm.insertCard('1234-5678');
+      atm.validatePIN('1234');
+      atm.selectAccount('1');
+    });
+
+    test('Should allow valid deposit', () => {
+      expect(atm.deposit(300)).toBe(true);
+      expect(atm.checkBalance()).toBe(800);
+    });
+
+    test('Should reject negative deposit amount', () => {
+      expect(atm.deposit(-100)).toBe(false);
+      expect(atm.checkBalance()).toBe(500);
+    });
+
+    test('Should handle multiple deposits', () => {
+      expect(atm.deposit(200)).toBe(true);
+      expect(atm.deposit(300)).toBe(true);
+      expect(atm.checkBalance()).toBe(1000);
+    });
+
+    test('Should handle zero deposit amount', () => {
+      expect(atm.deposit(0)).toBe(false);
+      expect(atm.checkBalance()).toBe(500);
+    });
   });
 
-  test('Should perform deposit correctly', async () => {
-    atm.insertCard('1234-5678');
-    atm.validatePIN('1234');
-    atm.selectAccount('1');
-    
-    expect(atm.deposit(500)).toBe(true);
-    expect(atm.checkBalance()).toBe(1000);
+  describe('Transaction Flow', () => {
+    beforeEach(() => {
+      atm.insertCard('1234-5678');
+      atm.validatePIN('1234');
+      atm.selectAccount('1');
+    });
+
+    test('Should handle mixed transactions correctly', () => {
+      expect(atm.deposit(500)).toBe(true);  // Balance: 1000
+      expect(atm.withdraw(300)).toBe(true); // Balance: 700
+      expect(atm.deposit(200)).toBe(true);  // Balance: 900
+      expect(atm.withdraw(900)).toBe(true); // Balance: 0
+      expect(atm.withdraw(100)).toBe(false); // Insufficient funds
+      expect(atm.checkBalance()).toBe(0);
+    });
   });
 });
