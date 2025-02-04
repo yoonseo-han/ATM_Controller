@@ -18,5 +18,11 @@ describe ('ATM Controller', () => {
     expect(atm.validatePin('1111')).toBe(false);
   });
 
+  test('Should handle account selection', () => {
+    atm.insertCard('1234-5678');
+    atm.validatePin('1234');
 
+    expect(atm.selectAccount('1')).toBe(true);
+    expect(atm.selectAccount('invalid')).toBe(false);
+  });
 });
