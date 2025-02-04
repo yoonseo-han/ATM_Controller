@@ -9,7 +9,7 @@ describe ('ATM Controller', () => {
 
   test('Should handle card insertion and verify card', () => {
     expect(atm.insertCard('1234-5678')).toBe(true);
-    expect(atm.insertCard('Not a card')).toBe(true);
+    expect(atm.insertCard('Not a card')).toBe(false);
   });
 
   test('Should verify PIN input', () => {

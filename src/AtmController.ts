@@ -4,6 +4,7 @@ import { Card } from "./models/Card";
 export class AtmController {
   private currentCard: Card | null;
   private selectedAccount: Account | null;
+  private isPinValidated: boolean | null;
 
   private readonly TEST_CARDS: Card[] = [
     new Card('1234-5678', '1234', [
@@ -13,28 +14,62 @@ export class AtmController {
   ];
   
   insertCard(cardNumber: string): boolean {
+    const card = this.TEST_CARDS.find(curCard => curCard.getCardNumber() === cardNumber);
 
+    if(card) {
+      this.currentCard = card;
+      return true;
+    }
 
-    return true;
+    return false;
   }
 
   validatePIN(pinNumber: string): boolean {
-    return true;
+    if (!this.currentCard) {
+      throw new Error('No card inserted');
+    }
+
+    this.isPinValidated = this.currentCard.validatePin(pinNumber);
+    return this.isPinValidated;
   }
 
   selectAccount(accountId: string): boolean {
-    return true;
+    if (!this.currentCard || !this.isPinValidated) {
+      throw new Error('Card not inserted or PIN not validated');
+    }
+
+    const account = this.currentCard.getAccount(accountId);
+    if (account) {
+      this.selectedAccount = account;
+      return true;
+    }
+    return false;
   }
 
   checkBalance(): number {
-    return 0;
+    if(!this.selectedAccount) {
+      throw new Error('No account selected');
+    }
+    return this.selectedAccount.getBalance();
   }
 
   withdraw(amount: number) {
-
+    if(!this.selectedAccount) {
+      throw new Error('No account selected');
+    }
+    return this.selectedAccount.withdraw(amount);
   }
 
   deposit(amount: number) {
-    
+    if(!this.selectedAccount) {
+      throw new Error('No account selected');
+    }
+    return this.selectedAccount.deposit(amount);
+  }
+
+  ejectCard() {
+    this.currentCard = null;
+    this.selectedAccount = null;
+    this.isPinValidated = false;
   }
 }
