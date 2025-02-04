@@ -34,7 +34,16 @@ export class AtmController {
   }
 
   selectAccount(accountId: string): boolean {
-    return true;
+    if (!this.currentCard || !this.isPinValidated) {
+      throw new Error('Card not inserted or PIN not validated');
+    }
+
+    const account = this.currentCard.getAccount(accountId);
+    if (account) {
+      this.selectedAccount = account;
+      return true;
+    }
+    return false;
   }
 
   checkBalance(): number {
