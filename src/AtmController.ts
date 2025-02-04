@@ -7,15 +7,21 @@ export class AtmController {
   private isPinValidated: boolean | null;
   private availableAccounts: Account[] = [];
   private selectedAccount: Account | null;
+  private isCardInserted: boolean = false;
 
   constructor(
     private bankService: BankService,
   ) {}
   
   insertCard(cardNumber: string): boolean {
+    if(this.isCardInserted) {
+      throw new Error('Card already inserted. Please remove card first..');
+    }
+
     const card = this.bankService.validateCard(cardNumber);
 
     if(card) {
+      this.isCardInserted = true;
       this.currentCard = card;
       return true;
     }
@@ -84,5 +90,6 @@ export class AtmController {
     this.selectedAccount = null;
     this.isPinValidated = false;
     this.availableAccounts = [];
+    this.isCardInserted = false;
   }
 }

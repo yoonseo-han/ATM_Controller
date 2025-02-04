@@ -23,9 +23,9 @@ describe('ATM Controller', () => {
       expect(atm.insertCard('')).toBe(false);
     });
 
-    test('Should handle multiple card insertions', () => {
+    test('Should reject multiple card insertions', () => {
       expect(atm.insertCard('1234-5678')).toBe(true);
-      expect(atm.insertCard('1234-5678')).toBe(false); 
+      expect(() => atm.insertCard('8765-4321')).toThrow('Card already inserted. Please remove card first..');
     });
   });
 
