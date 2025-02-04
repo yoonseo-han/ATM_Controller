@@ -53,7 +53,7 @@ export class BankService {
 
   withdraw(accountId: string, amount: number): boolean {
     const account = this.accounts.get(accountId);
-    if (!account || account.balance < amount) {
+    if (!account || account.balance < amount || amount < 0) {
         return false;
     }
 
@@ -63,7 +63,7 @@ export class BankService {
 
   deposit(accountId: string, amount: number): boolean {
     const account = this.accounts.get(accountId);
-    if (!account) {
+    if (!account || amount < 0) {
         return false;
     }
 

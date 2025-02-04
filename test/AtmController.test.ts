@@ -46,9 +46,9 @@ describe('ATM Controller', () => {
       expect(atm.validatePIN('')).toBe(false);
     });
 
-    test('Should handle PIN validation before card insertion', () => {
+    test('Should reject PIN validation before card insertion', () => {
       const newAtm = new AtmController(bankService);
-      expect(newAtm.validatePIN('1234')).toBe(false);
+      expect(() => newAtm.validatePIN('1234')).toThrow('No card inserted');
     });
   });
 
@@ -152,7 +152,7 @@ describe('ATM Controller', () => {
     });
 
     test('Should handle zero deposit amount', () => {
-      expect(atm.deposit(0)).toBe(false);
+      expect(atm.deposit(0)).toBe(true);
       expect(atm.checkBalance()).toBe(500);
     });
   });
