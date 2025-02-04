@@ -47,7 +47,10 @@ export class AtmController {
   }
 
   checkBalance(): number {
-    return 0;
+    if(!this.selectedAccount) {
+      throw new Error('No account selected');
+    }
+    return this.selectedAccount.getBalance();
   }
 
   withdraw(amount: number) {
