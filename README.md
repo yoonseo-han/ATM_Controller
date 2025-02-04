@@ -21,6 +21,11 @@ ATM Controller implemented which conducts the following features
 - Account being able to store all of the previous transaction records
 - Account being able to retrieve all of the previous transaction records
 
+## Overall Architecture
+
+- ATM Controller acts as an **interface** for the client request
+- **Information storage** and **Main operation (Card verification, Account balance transaction)** is done in Bank for centralized opertion
+
 ## Installation
 
 1. Clone the repository:
@@ -47,6 +52,8 @@ atm-controller/
 │   │   ├── Account.ts
 │   │   ├── Card.ts
 │   │   └── Transaction.ts
+│   ├── service/
+│   │   └── BankService.ts
 │   └── AtmController.ts
 ├── tests/
 │   └── AtmController.test.ts
