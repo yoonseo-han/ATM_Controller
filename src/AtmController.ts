@@ -1,3 +1,4 @@
+import { BankService } from "./bank/BankService";
 import { Account } from "./models/Account";
 import { Card } from "./models/Card";
 
@@ -6,12 +7,9 @@ export class AtmController {
   private selectedAccount: Account | null;
   private isPinValidated: boolean | null;
 
-  private readonly TEST_CARDS: Card[] = [
-    new Card('1234-5678', '1234', [
-        new Account('1', 500),
-        new Account('2', 1000)
-    ])
-  ];
+  constructor(
+    private bankService: BankService,
+  ) {}
   
   insertCard(cardNumber: string): boolean {
     const card = this.TEST_CARDS.find(curCard => curCard.getCardNumber() === cardNumber);
@@ -29,7 +27,7 @@ export class AtmController {
       throw new Error('No card inserted');
     }
 
-    this.isPinValidated = this.currentCard.validatePin(pinNumber);
+    this.isPinValidated = this.bankService.validatePin(pinNumber);
     return this.isPinValidated;
   }
 
