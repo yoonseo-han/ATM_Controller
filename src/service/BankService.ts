@@ -29,7 +29,6 @@ export class BankService {
   }
 
   validateCard(cardNumber: string): Card | null {
-    console.log(cardNumber);
     const card = this.cards.get(cardNumber);
     return card || null;
   }
@@ -40,7 +39,8 @@ export class BankService {
   }
 
   getAccounts(cardNumber: string): Account[] {
-    return [];
+    const accountIds = this.cardAccountMapping.get(cardNumber) || [];
+    return accountIds.map(id => this.accounts.get(id)!);
   }
 
   getAccountBalance(accountId: string): number {
