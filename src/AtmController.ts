@@ -4,6 +4,7 @@ import { Card } from "./models/Card";
 export class AtmController {
   private currentCard: Card | null;
   private selectedAccount: Account | null;
+  private isPinValidated: boolean | null;
 
   private readonly TEST_CARDS: Card[] = [
     new Card('1234-5678', '1234', [
@@ -24,7 +25,12 @@ export class AtmController {
   }
 
   validatePIN(pinNumber: string): boolean {
-    return true;
+    if (!this.currentCard) {
+      throw new Error('No card inserted');
+    }
+
+    this.isPinValidated = this.currentCard.validatePin(pinNumber);
+    return this.isPinValidated;
   }
 
   selectAccount(accountId: string): boolean {
