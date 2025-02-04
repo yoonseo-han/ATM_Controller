@@ -22,6 +22,8 @@ ATM Controller implemented which conducts the following features
 - Account being able to retrieve all of the previous transaction records
 
 ## Overall Architecture
+![image](https://github.com/user-attachments/assets/4a251370-0e9e-4675-9f05-9af4e6356297)
+
 
 - ATM Controller acts as an **interface** for the client request
 - **Information storage** and **Main operation (Card verification, Account balance transaction)** is done in Bank for centralized opertion
