@@ -66,4 +66,10 @@ export class AtmController {
     }
     return this.selectedAccount.deposit(amount);
   }
+
+  ejectCard() {
+    this.currentCard = null;
+    this.selectedAccount = null;
+    this.isPinValidated = false;
+  }
 }
