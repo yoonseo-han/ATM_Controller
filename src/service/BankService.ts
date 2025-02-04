@@ -28,5 +28,29 @@ export class BankService {
     this.cardAccountMapping.set('1234-5678', ['1']);
   }
 
-  
+  validateCard(cardNumber: string): Card | null {
+    return null;
+  }
+
+  validatePin(cardNumber: string, pinNumber: string): boolean {
+    return false;
+  }
+
+  getAccounts(cardNumber: string): Account[] {
+    return [];
+  }
+
+  getAccountBalance(accountId: string): number {
+    return 0;
+  }
+
+  withdraw(accountId: string, amount: number): boolean {
+
+    return true;
+  }
+
+  deposit(accountId: string, amount: number): boolean {
+
+    return true;
+  }
 }
