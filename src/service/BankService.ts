@@ -44,16 +44,30 @@ export class BankService {
   }
 
   getAccountBalance(accountId: string): number {
-    return 0;
+    const account = this.accounts.get(accountId);
+    if (!account) {
+        throw new Error('Account not found');
+    }
+    return account.balance;
   }
 
   withdraw(accountId: string, amount: number): boolean {
+    const account = this.accounts.get(accountId);
+    if (!account || account.balance < amount) {
+        return false;
+    }
 
+    account.balance -= amount;
     return true;
   }
 
   deposit(accountId: string, amount: number): boolean {
+    const account = this.accounts.get(accountId);
+    if (!account) {
+        return false;
+    }
 
+    account.balance += amount;
     return true;
   }
 }
