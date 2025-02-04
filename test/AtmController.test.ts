@@ -1,5 +1,5 @@
 import { AtmController } from "../src/AtmController";
-import { BankService } from "../src/bank/BankService";
+import { BankService } from "../src/service/BankService";
 
 describe ('ATM Controller', () => {
   let atm: AtmController;

@@ -1,4 +1,4 @@
-import { BankService } from "./bank/BankService";
+import { BankService } from "./service/BankService";
 import { Account } from "./models/Account";
 import { Card } from "./models/Card";
 
