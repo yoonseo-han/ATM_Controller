@@ -45,6 +45,12 @@ npm install
 npm run test
 ```
 
+## Test Result
+
+Conducted 22 tests based on the following areas
+<br>
+<img width="400" alt="Screenshot 2025-02-05 at 1 44 39 AM" src="https://github.com/user-attachments/assets/053969e7-bedb-4cf4-8db7-13b1feb5ae3a" />
+
 ## Project Structure
 
 ```
