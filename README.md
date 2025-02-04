@@ -16,9 +16,19 @@ ATM Controller implemented which conducts the following features
 - Deposit: Adding money to the account (increase balance)
 - Withdraw: Taking money away from the account (decrease balance)
 
-## Git Branch Strategy
+## Git strategy
 
-Types
+### Branch strategy
+
+Branch types
+
+- main: Production code
+- feature: New features
+- test: test codes added
+
+### Commit message stratecy
+
+Message types
 
 - feat: New feature
 - fix: Bug fix
