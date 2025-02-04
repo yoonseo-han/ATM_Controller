@@ -35,7 +35,8 @@ export class BankService {
   }
 
   validatePin(cardNumber: string, pinNumber: string): boolean {
-    return false;
+    const card = this.cards.get(cardNumber);
+    return card?.pin === pinNumber;
   }
 
   getAccounts(cardNumber: string): Account[] {
