@@ -29,7 +29,9 @@ export class BankService {
   }
 
   validateCard(cardNumber: string): Card | null {
-    return null;
+    console.log(cardNumber);
+    const card = this.cards.get(cardNumber);
+    return card || null;
   }
 
   validatePin(cardNumber: string, pinNumber: string): boolean {

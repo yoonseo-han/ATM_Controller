@@ -6,6 +6,7 @@ describe ('ATM Controller', () => {
   let bankService: BankService;
   
   beforeEach(() => {
+    bankService = new BankService();
     atm = new AtmController(bankService);
   });
 
