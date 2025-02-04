@@ -1,10 +1,12 @@
 import { AtmController } from "../src/AtmController";
+import { BankService } from "../src/service/BankService";
 
 describe ('ATM Controller', () => {
   let atm: AtmController;
+  let bankService: BankService;
   
   beforeEach(() => {
-    atm = new AtmController();
+    atm = new AtmController(bankService);
   });
 
   test('Should handle card insertion and verify card', () => {
