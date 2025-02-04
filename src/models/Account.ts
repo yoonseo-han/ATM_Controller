@@ -24,6 +24,10 @@ export class Account {
   }
 
   deposit(amount: number): boolean { 
+    if (amount <= 0) {
+      throw new Error('Invalid amount');
+    }
+    this.balance += amount;
     return true;
   }
 }
