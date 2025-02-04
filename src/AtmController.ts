@@ -13,9 +13,14 @@ export class AtmController {
   ];
   
   insertCard(cardNumber: string): boolean {
+    const card = this.TEST_CARDS.find(curCard => curCard.getCardNumber() === cardNumber);
 
+    if(card) {
+      this.currentCard = card;
+      return true;
+    }
 
-    return true;
+    return false;
   }
 
   validatePIN(pinNumber: string): boolean {
