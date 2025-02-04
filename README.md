@@ -22,17 +22,17 @@ ATM Controller implemented which conducts the following features
 
 Branch types
 
-- main: Production code
-- feature: New features
-- test: test codes added
+- `main`: Production code
+- `feature`: New features
+- `test`: test codes added
 
 ### Commit message stratecy
 
 Message types
 
-- feat: New feature
-- fix: Bug fix
-- refactor: Code refactoring
-- test: Adding tests
-- env: Environment setup and maintenance tasks
-- docs: Documentation update
+- `feat`: New feature
+- `fix`: Bug fix
+- `refactor`: Code refactoring
+- `test`: Adding tests
+- `env`: Environment setup and maintenance tasks
+- `docs`: Documentation update
