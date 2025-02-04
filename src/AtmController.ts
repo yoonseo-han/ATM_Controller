@@ -53,14 +53,14 @@ export class AtmController {
     return this.selectedAccount.getBalance();
   }
 
-  withdraw(amount: number) {
+  withdraw(amount: number): boolean {
     if(!this.selectedAccount) {
       throw new Error('No account selected');
     }
     return this.selectedAccount.withdraw(amount);
   }
 
-  deposit(amount: number) {
+  deposit(amount: number): boolean {
     if(!this.selectedAccount) {
       throw new Error('No account selected');
     }
