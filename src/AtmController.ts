@@ -54,10 +54,16 @@ export class AtmController {
   }
 
   withdraw(amount: number) {
-
+    if(!this.selectedAccount) {
+      throw new Error('No account selected');
+    }
+    return this.selectedAccount.withdraw(amount);
   }
 
   deposit(amount: number) {
-    
+    if(!this.selectedAccount) {
+      throw new Error('No account selected');
+    }
+    return this.selectedAccount.deposit(amount);
   }
 }
