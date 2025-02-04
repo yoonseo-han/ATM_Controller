@@ -6,6 +6,7 @@ describe ('ATM Controller', () => {
   let bankService: BankService;
   
   beforeEach(() => {
+    bankService = new BankService();
     atm = new AtmController(bankService);
   });
 
@@ -18,6 +19,16 @@ describe ('ATM Controller', () => {
     atm.insertCard('1234-5678');
     expect(atm.validatePIN('1234')).toBe(true);
     expect(atm.validatePIN('1111')).toBe(false);
+  });
+
+  test('Should get account information correctly after PIN validation', () => {
+    atm.insertCard('1234-5678');
+    atm.validatePIN('1234');
+    
+    const accounts = atm.getAccounts();
+    expect(accounts).toHaveLength(1);
+    expect(accounts[0].id).toBe('1');
+    expect(accounts[0].balance).toBe(500);
   });
 
   test('Should handle account selection', () => {
