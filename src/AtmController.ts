@@ -4,15 +4,16 @@ import { Card } from "./models/Card";
 
 export class AtmController {
   private currentCard: Card | null;
-  private selectedAccount: Account | null;
   private isPinValidated: boolean | null;
+  private availableAccounts: Account[] = [];
+  private selectedAccount: Account | null;
 
   constructor(
     private bankService: BankService,
   ) {}
   
   insertCard(cardNumber: string): boolean {
-    const card = this.TEST_CARDS.find(curCard => curCard.getCardNumber() === cardNumber);
+    const card = this.bankService.validateCard(cardNumber);
 
     if(card) {
       this.currentCard = card;
@@ -27,16 +28,29 @@ export class AtmController {
       throw new Error('No card inserted');
     }
 
-    this.isPinValidated = this.bankService.validatePin(pinNumber);
-    return this.isPinValidated;
+    const isValid = this.bankService.validatePin(this.currentCard.cardNumber, pinNumber);
+    if (isValid) {
+        this.currentCard.pin = pinNumber;
+        this.isPinValidated = true;
+        this.availableAccounts = this.bankService.getAccounts(this.currentCard.cardNumber);
+        return true;
+    }
+    return false;
   }
+
+  getAccounts(): Account[] {
+    if (!this.currentCard || !this.isPinValidated) {
+        throw new Error('Card not inserted or PIN not validated');
+    }
+    return this.availableAccounts;
+}
 
   selectAccount(accountId: string): boolean {
     if (!this.currentCard || !this.isPinValidated) {
       throw new Error('Card not inserted or PIN not validated');
     }
 
-    const account = this.currentCard.getAccount(accountId);
+    const account = this.availableAccounts.find(acc => acc.id === accountId);
     if (account) {
       this.selectedAccount = account;
       return true;
@@ -48,26 +62,27 @@ export class AtmController {
     if(!this.selectedAccount) {
       throw new Error('No account selected');
     }
-    return this.selectedAccount.getBalance();
+    return this.bankService.getAccountBalance(this.selectedAccount.id);
   }
 
   withdraw(amount: number): boolean {
     if(!this.selectedAccount) {
       throw new Error('No account selected');
     }
-    return this.selectedAccount.withdraw(amount);
+    return this.bankService.withdraw(this.selectedAccount.id, amount);
   }
 
   deposit(amount: number): boolean {
     if(!this.selectedAccount) {
       throw new Error('No account selected');
     }
-    return this.selectedAccount.deposit(amount);
+    return this.bankService.deposit(this.selectedAccount.id, amount);
   }
 
   ejectCard() {
     this.currentCard = null;
     this.selectedAccount = null;
     this.isPinValidated = false;
+    this.availableAccounts = [];
   }
 }
